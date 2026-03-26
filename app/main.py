@@ -36,5 +36,11 @@ def api_apply():
     return jsonify(result)
 
 
+@app.route("/api/off", methods=["POST"])
+def api_off():
+    result = led_service.all_off()
+    return jsonify(result)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)

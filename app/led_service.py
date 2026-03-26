@@ -1,5 +1,4 @@
 import os
-import shlex
 import subprocess
 
 
@@ -29,6 +28,13 @@ class MockLedService:
             "mode": "mock",
             "applied": True,
             "commands": commands
+        }
+
+    def all_off(self):
+        return {
+            "mode": "mock",
+            "success": True,
+            "commands": ["all -off"]
         }
 
 
@@ -87,6 +93,24 @@ class CliLedService:
                 }
                 for r in results
             ]
+        }
+
+    def all_off(self):
+        if not os.path.exists(self.cli_path):
+            return {
+                "mode": "real",
+                "success": False,
+                "error": f"CLI not found: {self.cli_path}"
+            }
+
+        result = self._run(["all", "-off"])
+
+        return {
+            "mode": "real",
+            "success": result.returncode == 0,
+            "returncode": result.returncode,
+            "stdout": result.stdout.strip(),
+            "stderr": result.stderr.strip()
         }
 
 

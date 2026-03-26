@@ -113,8 +113,18 @@ async function applyConfig() {
     document.getElementById("resultBox").textContent = JSON.stringify(result, null, 2);
 }
 
+async function allOff() {
+    const res = await fetch("/api/off", {
+        method: "POST"
+    });
+
+    const result = await res.json();
+    document.getElementById("resultBox").textContent = JSON.stringify(result, null, 2);
+}
+
 document.getElementById("saveBtn").addEventListener("click", saveConfig);
 document.getElementById("applyBtn").addEventListener("click", applyConfig);
+document.getElementById("offBtn").addEventListener("click", allOff);
 
 bindPreviewEvents();
 loadStatus();
