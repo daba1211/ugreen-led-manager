@@ -2,7 +2,7 @@ name: ugreen-led-manager
 
 services:
   app:
-    image: ghcr.io/daba1211/ugreen-led-manager:0.1.0
+    image: ghcr.io/daba1211/ugreen-led-manager:0.2.0
     container_name: ugreen-led-manager
     restart: unless-stopped
     privileged: true
