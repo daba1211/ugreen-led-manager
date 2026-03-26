@@ -1,0 +1,97 @@
+import os
+import shlex
+import subprocess
+
+
+class MockLedService:
+    def status(self):
+        return {
+            "mode": "mock",
+            "cli_path": None,
+            "ready": True
+        }
+
+    def apply_config(self, config):
+        commands = []
+
+        commands.append(
+            f"power -on -color {config['power']['r']} {config['power']['g']} {config['power']['b']}"
+        )
+        commands.append(
+            f"netdev -on -color {config['netdev']['r']} {config['netdev']['g']} {config['netdev']['b']}"
+        )
+
+        for disk in ("disk1", "disk2", "disk3", "disk4"):
+            c = config[disk]["active"]
+            commands.append(f"{disk} -on -color {c['r']} {c['g']} {c['b']}")
+
+        return {
+            "mode": "mock",
+            "applied": True,
+            "commands": commands
+        }
+
+
+class CliLedService:
+    def __init__(self):
+        self.cli_path = os.environ.get("LED_CLI_PATH", "/opt/ugreen-led/bin/ugreen_leds_cli")
+
+    def status(self):
+        return {
+            "mode": "real",
+            "cli_path": self.cli_path,
+            "ready": os.path.exists(self.cli_path)
+        }
+
+    def _run(self, args):
+        cmd = [self.cli_path] + args
+        return subprocess.run(cmd, capture_output=True, text=True, check=False)
+
+    def apply_config(self, config):
+        if not os.path.exists(self.cli_path):
+            return {
+                "mode": "real",
+                "applied": False,
+                "error": f"CLI not found: {self.cli_path}"
+            }
+
+        results = []
+
+        power = config["power"]
+        results.append(self._run([
+            "power", "-on",
+            "-color", str(power["r"]), str(power["g"]), str(power["b"])
+        ]))
+
+        netdev = config["netdev"]
+        results.append(self._run([
+            "netdev", "-on",
+            "-color", str(netdev["r"]), str(netdev["g"]), str(netdev["b"])
+        ]))
+
+        for disk in ("disk1", "disk2", "disk3", "disk4"):
+            c = config[disk]["active"]
+            results.append(self._run([
+                disk, "-on",
+                "-color", str(c["r"]), str(c["g"]), str(c["b"])
+            ]))
+
+        return {
+            "mode": "real",
+            "applied": all(r.returncode == 0 for r in results),
+            "results": [
+                {
+                    "returncode": r.returncode,
+                    "stdout": r.stdout.strip(),
+                    "stderr": r.stderr.strip()
+                }
+                for r in results
+            ]
+        }
+
+
+def get_led_service():
+    mode = os.environ.get("LED_MODE", "mock").lower()
+    if mode == "real":
+        return CliLedService()
+    return MockLedService()

@@ -1,0 +1,13 @@
+services:
+  ugreen-led-manager:
+    build: .
+    container_name: ugreen-led-manager
+    restart: unless-stopped
+    ports:
+      - "8088:8080"
+    environment:
+      TZ: Europe/Berlin
+      LED_MODE: mock
+      LED_CONFIG_PATH: /app/config/led-config.json
+    volumes:
+      - ./config:/app/config

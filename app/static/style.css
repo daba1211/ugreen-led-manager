@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #eee;
+}
+
+.wrap {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 12px;
+}
+
+#statusBox {
+    margin-top: 16px;
+    padding: 12px;
+    background: #151515;
+    border: 1px solid #2f2f2f;
+    border-radius: 8px;
+    white-space: pre-wrap;
+}
