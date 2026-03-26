@@ -14,7 +14,7 @@ Die CLI stammt aus diesem Projekt:
 
 - https://github.com/miskcoo/ugreen_leds_controller
 
-Das Upstream-Projekt beschreibt, dass die LED-Steuerung über I2C erfolgt, `i2c-dev` benötigt wird und dass sich Kommandozeilen-Tool und Kernel-Modul `led_ugreen` gegenseitig in die Quere kommen. Für die Nutzung der CLI soll `led_ugreen` daher entladen sein. citeturn214109view0
+Das Upstream-Projekt beschreibt, dass die LED-Steuerung über I2C erfolgt, `i2c-dev` benötigt wird und dass sich Kommandozeilen-Tool und Kernel-Modul `led_ugreen` gegenseitig in die Quere kommen. Für die Nutzung der CLI soll `led_ugreen` daher entladen sein.
 
 ### CLI vorbereiten
 
@@ -52,7 +52,7 @@ chmod 755 /DATA/AppData/ugreen-led/bin/ugreen_leds_cli
 /DATA/AppData/ugreen-led/bin/ugreen_leds_cli all -off
 ```
 
-Die Upstream-CLI unterstützt unter anderem `-color`, `-brightness`, `-on`, `-off` und LEDs wie `power`, `netdev`, `disk1` bis `disk8`. citeturn214109view0
+Die Upstream-CLI unterstützt unter anderem `-color`, `-brightness`, `-on`, `-off` und LEDs wie `power`, `netdev`, `disk1` bis `disk8`.
 
 ### App über Docker Compose installieren
 
@@ -88,12 +88,12 @@ Diese Datei kann direkt in ZimaOS als Custom App verwendet werden.
 ### Hinweis
 
 Die Entwicklung dieses Projekts wurde mit Hilfe von ChatGPT unterstützt.  
-Die eigentliche LED-Ansteuerung basiert auf der CLI aus dem Projekt `miskcoo/ugreen_leds_controller`. citeturn214109view0turn214109view1
+Die eigentliche LED-Ansteuerung basiert auf der CLI aus dem Projekt `miskcoo/ugreen_leds_controller`.
 
 ### Dank
 
 Vielen Dank an den Ersteller von `ugreen_leds_controller`.  
-Ohne dieses Projekt und die bereitgestellte CLI wäre diese App in dieser Form nicht möglich gewesen. citeturn214109view0
+Ohne dieses Projekt und die bereitgestellte CLI wäre diese App in dieser Form nicht möglich gewesen.
 
 ---
 
@@ -111,7 +111,7 @@ The CLI comes from this project:
 
 - https://github.com/miskcoo/ugreen_leds_controller
 
-The upstream project explains that LED control is done over I2C, requires `i2c-dev`, and that the command-line tool conflicts with the `led_ugreen` kernel module. To use the CLI, `led_ugreen` should therefore be unloaded. citeturn214109view0
+The upstream project explains that LED control is done over I2C, requires `i2c-dev`, and that the command-line tool conflicts with the `led_ugreen` kernel module. To use the CLI, `led_ugreen` should therefore be unloaded.
 
 ### Prepare the CLI
 
@@ -149,7 +149,7 @@ chmod 755 /DATA/AppData/ugreen-led/bin/ugreen_leds_cli
 /DATA/AppData/ugreen-led/bin/ugreen_leds_cli all -off
 ```
 
-The upstream CLI supports options such as `-color`, `-brightness`, `-on`, `-off`, and LEDs like `power`, `netdev`, and `disk1` to `disk8`. citeturn214109view0
+The upstream CLI supports options such as `-color`, `-brightness`, `-on`, `-off`, and LEDs like `power`, `netdev`, and `disk1` to `disk8`.
 
 ### Install the app via Docker Compose
 
@@ -185,9 +185,9 @@ This file can be used directly in ZimaOS as a custom app.
 ### Note
 
 The development of this project was supported with the help of ChatGPT.  
-The actual LED control is based on the CLI from the `miskcoo/ugreen_leds_controller` project. citeturn214109view0turn214109view1
+The actual LED control is based on the CLI from the `miskcoo/ugreen_leds_controller` project.
 
 ### Thanks
 
 Many thanks to the creator of `ugreen_leds_controller`.  
-Without that project and the provided CLI, this app would not have been possible in this form. citeturn214109view0
+Without that project and the provided CLI, this app would not have been possible in this form.
