@@ -370,3 +370,35 @@ renderUI();
 loadStatus();
 loadConfig();
 document.getElementById("resultBox").textContent = t("responseEmpty");
+
+async function loadPreflight() {
+    const res = await fetch("/api/preflight");
+    const data = await res.json();
+
+    const parts = [];
+    parts.push(`CLI: ${data.cli_exists ? "ok" : "fehlt"}`);
+    parts.push(`i2c_dev: ${data.i2c_dev_loaded ? "geladen" : "nicht geladen"}`);
+    parts.push(`led_ugreen: ${data.led_ugreen_loaded ? "geladen" : "nicht geladen"}`);
+    parts.push(`I2C-Gerät: ${data.i2c_device_exists ? "ok" : "fehlt"}`);
+
+    let text = parts.join(" | ");
+
+    if (data.messages && data.messages.length) {
+        text += "\\n" + data.messages.join("\\n");
+    }
+
+    document.getElementById("preflightText").textContent = text;
+}
+
+async function fixPreflight() {
+    const res = await fetch("/api/preflight/fix", {
+        method: "POST"
+    });
+
+    const result = await res.json();
+    document.getElementById("resultBox").textContent = JSON.stringify(result, null, 2);
+    await loadPreflight();
+}
+document.getElementById("checkBtn").addEventListener("click", loadPreflight);
+document.getElementById("fixBtn").addEventListener("click", fixPreflight);
+loadPreflight();

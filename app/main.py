@@ -3,9 +3,11 @@ from flask import Flask, jsonify, render_template, request
 from app.config_store import load_config, save_config
 from app.disk_monitor import DiskMonitor
 from app.led_service import get_led_service
+from app.preflight import PreflightChecker
 
 app = Flask(__name__)
 led_service = get_led_service()
+preflight = PreflightChecker()
 
 disk_monitor = DiskMonitor(led_service)
 disk_monitor.start()
@@ -31,6 +33,16 @@ def api_save_config():
 @app.route("/api/status", methods=["GET"])
 def api_status():
     return jsonify(led_service.status())
+
+
+@app.route("/api/preflight", methods=["GET"])
+def api_preflight():
+    return jsonify(preflight.check())
+
+
+@app.route("/api/preflight/fix", methods=["POST"])
+def api_preflight_fix():
+    return jsonify(preflight.fix())
 
 
 @app.route("/api/apply", methods=["POST"])

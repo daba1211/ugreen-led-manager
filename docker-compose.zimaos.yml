@@ -16,14 +16,15 @@ services:
       LED_MONITOR_ENABLED: "true"
       LED_DISK_MAP: "disk1:sda,disk2:sdb,disk3:sdc,disk4:sdd"
       LED_SMART_DEVICE_TYPE: "ata"
-      LED_POLL_INTERVAL: "5"
-      LED_SMART_INTERVAL: "30"
-      LED_ACTIVE_HOLD_SECONDS: "15"
+      LED_POLL_INTERVAL: "15"
+      LED_SMART_INTERVAL: "600"
+      LED_ACTIVE_HOLD_SECONDS: "30"
     volumes:
       - /DATA/AppData/ugreen-led-manager/config:/data/config
       - /DATA/AppData/ugreen-led/bin:/opt/ugreen-led/bin:ro
       - /dev:/dev
       - /sys:/sys:ro
+      - /lib/modules:/lib/modules:ro
     x-casaos:
       ports:
         - container: "8080"
