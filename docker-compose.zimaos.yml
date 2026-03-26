@@ -1,0 +1,55 @@
+name: ugreen-led-manager
+
+services:
+  app:
+    image: ghcr.io/daba1211/ugreen-led-manager:0.1.0
+    container_name: ugreen-led-manager
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "8088:8080"
+    environment:
+      TZ: Europe/Berlin
+      LED_MODE: real
+      LED_CONFIG_PATH: /data/config/led-config.json
+      LED_CLI_PATH: /opt/ugreen-led/bin/ugreen_leds_cli
+    volumes:
+      - /DATA/AppData/ugreen-led-manager/config:/data/config
+      - /DATA/AppData/ugreen-led/bin:/opt/ugreen-led/bin:ro
+      - /dev:/dev
+    x-casaos:
+      ports:
+        - container: "8080"
+          description:
+            en_us: Web UI port
+      volumes:
+        - container: /data/config
+          description:
+            en_us: Persistent application configuration
+        - container: /opt/ugreen-led/bin
+          description:
+            en_us: Mounted ugreen_leds_cli binary directory
+
+x-casaos:
+  architectures:
+    - amd64
+  main: app
+  author: daba1211
+  category: Utilities
+  developer: daba1211
+  icon: https://raw.githubusercontent.com/daba1211/ugreen-led-manager/main/assets/icon.png
+  index: /
+  port_map: "8088"
+  project_url: https://github.com/daba1211/ugreen-led-manager
+  title:
+    en_us: UGREEN LED Manager
+    de_de: UGREEN LED Manager
+  tagline:
+    en_us: Lightweight LED control UI for UGREEN DXP NAS devices
+    de_de: Leichtgewichtige LED-Steuerung für UGREEN DXP NAS Geräte
+  description:
+    en_us: Configure power, network and disk LEDs on UGREEN DXP systems using ugreen_leds_cli.
+    de_de: Konfiguriert Power-, Netzwerk- und Disk-LEDs auf UGREEN DXP Systemen mit ugreen_leds_cli.
+  screenshot_link:
+    - https://raw.githubusercontent.com/daba1211/ugreen-led-manager/main/assets/screenshot-1.png
+  thumbnail: https://raw.githubusercontent.com/daba1211/ugreen-led-manager/main/assets/icon.png
