@@ -10,6 +10,13 @@ class MockLedService:
             "ready": True
         }
 
+    def set_color(self, target, color):
+        return {
+            "mode": "mock",
+            "success": True,
+            "command": f"{target} -on -color {color['r']} {color['g']} {color['b']}"
+        }
+
     def apply_config(self, config):
         commands = []
 
@@ -52,6 +59,27 @@ class CliLedService:
     def _run(self, args):
         cmd = [self.cli_path] + args
         return subprocess.run(cmd, capture_output=True, text=True, check=False)
+
+    def set_color(self, target, color):
+        if not os.path.exists(self.cli_path):
+            return {
+                "mode": "real",
+                "success": False,
+                "error": f"CLI not found: {self.cli_path}"
+            }
+
+        result = self._run([
+            target, "-on",
+            "-color", str(color["r"]), str(color["g"]), str(color["b"])
+        ])
+
+        return {
+            "mode": "real",
+            "success": result.returncode == 0,
+            "returncode": result.returncode,
+            "stdout": result.stdout.strip(),
+            "stderr": result.stderr.strip()
+        }
 
     def apply_config(self, config):
         if not os.path.exists(self.cli_path):

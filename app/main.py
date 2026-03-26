@@ -1,10 +1,14 @@
 from flask import Flask, jsonify, render_template, request
 
 from app.config_store import load_config, save_config
+from app.disk_monitor import DiskMonitor
 from app.led_service import get_led_service
 
 app = Flask(__name__)
 led_service = get_led_service()
+
+disk_monitor = DiskMonitor(led_service)
+disk_monitor.start()
 
 
 @app.route("/")

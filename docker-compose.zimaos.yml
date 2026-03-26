@@ -13,10 +13,17 @@ services:
       LED_MODE: real
       LED_CONFIG_PATH: /data/config/led-config.json
       LED_CLI_PATH: /opt/ugreen-led/bin/ugreen_leds_cli
+      LED_MONITOR_ENABLED: "true"
+      LED_DISK_MAP: "disk1:sda,disk2:sdb,disk3:sdc,disk4:sdd"
+      LED_SMART_DEVICE_TYPE: "ata"
+      LED_POLL_INTERVAL: "5"
+      LED_SMART_INTERVAL: "30"
+      LED_ACTIVE_HOLD_SECONDS: "15"
     volumes:
       - /DATA/AppData/ugreen-led-manager/config:/data/config
       - /DATA/AppData/ugreen-led/bin:/opt/ugreen-led/bin:ro
       - /dev:/dev
+      - /sys:/sys:ro
     x-casaos:
       ports:
         - container: "8080"

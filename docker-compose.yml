@@ -9,5 +9,6 @@ services:
       TZ: Europe/Berlin
       LED_MODE: mock
       LED_CONFIG_PATH: /app/config/led-config.json
+      LED_MONITOR_ENABLED: "false"
     volumes:
       - ./config:/app/config
