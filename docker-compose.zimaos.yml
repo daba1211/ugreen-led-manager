@@ -60,4 +60,3 @@ x-casaos:
     de_de: Konfiguriert Power-, Netzwerk- und Disk-LEDs auf UGREEN DXP Systemen mit ugreen_leds_cli.
   screenshot_link:
     - https://raw.githubusercontent.com/daba1211/ugreen-led-manager/main/assets/screenshot-1.png
-  thumbnail: https://raw.githubusercontent.com/daba1211/ugreen-led-manager/main/assets/icon.png
