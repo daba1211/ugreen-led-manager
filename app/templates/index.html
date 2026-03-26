@@ -9,153 +9,49 @@
 <body>
     <header class="header">
         <div class="header-inner">
-            <h1>UGREEN LED Manager</h1>
-            <p>LED-Konfiguration für UGREEN DXP</p>
+            <div class="brand">
+                <img src="/static/logo.svg" alt="UGREEN LED Manager Logo" class="brand-logo">
+                <div>
+                    <h1 id="titleText">UGREEN LED Manager</h1>
+                    <p id="subtitleText">LED-Konfiguration für UGREEN DXP</p>
+                </div>
+            </div>
+
+            <div class="lang-switch">
+                <button id="langDeBtn" class="lang-btn" type="button">DE</button>
+                <button id="langEnBtn" class="lang-btn" type="button">EN</button>
+            </div>
         </div>
     </header>
 
     <main class="page">
         <section class="status-card">
             <div>
-                <h2>Status</h2>
+                <h2 id="statusHeading">Status</h2>
                 <p id="statusText">Lade Status ...</p>
             </div>
+
             <div class="status-actions">
-                 <button id="saveBtn" class="btn btn-secondary">Speichern</button>
-                 <button id="offBtn" class="btn btn-secondary">Alles aus</button>
-                 <button id="applyBtn" class="btn btn-primary">Speichern & Anwenden</button>
+                <button id="saveBtn" class="btn btn-secondary" type="button">Speichern</button>
+                <button id="offBtn" class="btn btn-secondary" type="button">Alles aus</button>
+                <button id="applyBtn" class="btn btn-primary" type="button">Speichern & Anwenden</button>
             </div>
         </section>
 
         <section class="grid">
             <div class="card">
-                <h2>Allgemein</h2>
-
-                <div class="field-row">
-                    <label for="power">Power</label>
-                    <div class="input-wrap">
-                        <input type="color" id="power">
-                        <span class="preview" id="preview-power"></span>
-                    </div>
-                </div>
-
-                <div class="field-row">
-                    <label for="netdev">Netzwerk</label>
-                    <div class="input-wrap">
-                        <input type="color" id="netdev">
-                        <span class="preview" id="preview-netdev"></span>
-                    </div>
-                </div>
+                <h2 id="generalHeading">Allgemein</h2>
+                <div id="generalControls"></div>
             </div>
 
             <div class="card card-wide">
-                <h2>Disks</h2>
-                <div class="disk-grid">
-                    <div class="disk-card">
-                        <h3>Disk 1</h3>
-                        <div class="field-row">
-                            <label for="disk1-active">Aktiv</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk1-active">
-                                <span class="preview" id="preview-disk1-active"></span>
-                            </div>
-                        </div>
-                        <div class="field-row">
-                            <label for="disk1-standby">Standby</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk1-standby">
-                                <span class="preview" id="preview-disk1-standby"></span>
-                            </div>
-                        </div>
-                        <div class="field-row">
-                            <label for="disk1-error">Fehler</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk1-error">
-                                <span class="preview" id="preview-disk1-error"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="disk-card">
-                        <h3>Disk 2</h3>
-                        <div class="field-row">
-                            <label for="disk2-active">Aktiv</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk2-active">
-                                <span class="preview" id="preview-disk2-active"></span>
-                            </div>
-                        </div>
-                        <div class="field-row">
-                            <label for="disk2-standby">Standby</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk2-standby">
-                                <span class="preview" id="preview-disk2-standby"></span>
-                            </div>
-                        </div>
-                        <div class="field-row">
-                            <label for="disk2-error">Fehler</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk2-error">
-                                <span class="preview" id="preview-disk2-error"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="disk-card">
-                        <h3>Disk 3</h3>
-                        <div class="field-row">
-                            <label for="disk3-active">Aktiv</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk3-active">
-                                <span class="preview" id="preview-disk3-active"></span>
-                            </div>
-                        </div>
-                        <div class="field-row">
-                            <label for="disk3-standby">Standby</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk3-standby">
-                                <span class="preview" id="preview-disk3-standby"></span>
-                            </div>
-                        </div>
-                        <div class="field-row">
-                            <label for="disk3-error">Fehler</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk3-error">
-                                <span class="preview" id="preview-disk3-error"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="disk-card">
-                        <h3>Disk 4</h3>
-                        <div class="field-row">
-                            <label for="disk4-active">Aktiv</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk4-active">
-                                <span class="preview" id="preview-disk4-active"></span>
-                            </div>
-                        </div>
-                        <div class="field-row">
-                            <label for="disk4-standby">Standby</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk4-standby">
-                                <span class="preview" id="preview-disk4-standby"></span>
-                            </div>
-                        </div>
-                        <div class="field-row">
-                            <label for="disk4-error">Fehler</label>
-                            <div class="input-wrap">
-                                <input type="color" id="disk4-error">
-                                <span class="preview" id="preview-disk4-error"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h2 id="diskHeading">Disks</h2>
+                <div id="diskGrid" class="disk-grid"></div>
             </div>
         </section>
 
         <section class="card">
-            <h2>Antwort</h2>
+            <h2 id="resultHeading">Antwort</h2>
             <pre id="resultBox">Noch keine Aktion ausgeführt.</pre>
         </section>
     </main>

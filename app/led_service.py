@@ -2,6 +2,11 @@ import os
 import subprocess
 
 
+def _brightness_value(config):
+    value = int(config.get("brightness", 255))
+    return max(0, min(255, value))
+
+
 class MockLedService:
     def status(self):
         return {
@@ -10,26 +15,34 @@ class MockLedService:
             "ready": True
         }
 
-    def set_color(self, target, color):
+    def set_color(self, target, config):
         return {
             "mode": "mock",
             "success": True,
-            "command": f"{target} -on -color {color['r']} {color['g']} {color['b']}"
+            "command": (
+                f"{target} -on -color {config['r']} {config['g']} {config['b']} "
+                f"-brightness {_brightness_value(config)}"
+            )
         }
 
     def apply_config(self, config):
         commands = []
 
         commands.append(
-            f"power -on -color {config['power']['r']} {config['power']['g']} {config['power']['b']}"
+            f"power -on -color {config['power']['r']} {config['power']['g']} {config['power']['b']} "
+            f"-brightness {_brightness_value(config['power'])}"
         )
         commands.append(
-            f"netdev -on -color {config['netdev']['r']} {config['netdev']['g']} {config['netdev']['b']}"
+            f"netdev -on -color {config['netdev']['r']} {config['netdev']['g']} {config['netdev']['b']} "
+            f"-brightness {_brightness_value(config['netdev'])}"
         )
 
         for disk in ("disk1", "disk2", "disk3", "disk4"):
             c = config[disk]["active"]
-            commands.append(f"{disk} -on -color {c['r']} {c['g']} {c['b']}")
+            commands.append(
+                f"{disk} -on -color {c['r']} {c['g']} {c['b']} "
+                f"-brightness {_brightness_value(c)}"
+            )
 
         return {
             "mode": "mock",
@@ -60,7 +73,15 @@ class CliLedService:
         cmd = [self.cli_path] + args
         return subprocess.run(cmd, capture_output=True, text=True, check=False)
 
-    def set_color(self, target, color):
+    def _run_set(self, target, config):
+        return self._run([
+            target,
+            "-on",
+            "-color", str(config["r"]), str(config["g"]), str(config["b"]),
+            "-brightness", str(_brightness_value(config))
+        ])
+
+    def set_color(self, target, config):
         if not os.path.exists(self.cli_path):
             return {
                 "mode": "real",
@@ -68,10 +89,7 @@ class CliLedService:
                 "error": f"CLI not found: {self.cli_path}"
             }
 
-        result = self._run([
-            target, "-on",
-            "-color", str(color["r"]), str(color["g"]), str(color["b"])
-        ])
+        result = self._run_set(target, config)
 
         return {
             "mode": "real",
@@ -90,25 +108,11 @@ class CliLedService:
             }
 
         results = []
-
-        power = config["power"]
-        results.append(self._run([
-            "power", "-on",
-            "-color", str(power["r"]), str(power["g"]), str(power["b"])
-        ]))
-
-        netdev = config["netdev"]
-        results.append(self._run([
-            "netdev", "-on",
-            "-color", str(netdev["r"]), str(netdev["g"]), str(netdev["b"])
-        ]))
+        results.append(self._run_set("power", config["power"]))
+        results.append(self._run_set("netdev", config["netdev"]))
 
         for disk in ("disk1", "disk2", "disk3", "disk4"):
-            c = config[disk]["active"]
-            results.append(self._run([
-                disk, "-on",
-                "-color", str(c["r"]), str(c["g"]), str(c["b"])
-            ]))
+            results.append(self._run_set(disk, config[disk]["active"]))
 
         return {
             "mode": "real",

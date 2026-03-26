@@ -134,8 +134,14 @@ class DiskMonitor:
 
             state = self._desired_state(led_name, dev_name)
             color = config[led_name][state]
-            apply_key = (state, color["r"], color["g"], color["b"])
-
+            apply_key = (
+                state,
+                color["r"],
+                color["g"],
+                color["b"],
+                int(color.get("brightness", 255))
+            )
+            
             if self.last_applied.get(led_name) == apply_key:
                 continue
 
