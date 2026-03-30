@@ -2,7 +2,7 @@ name: ugreen-led-manager
 
 services:
   app:
-    image: ghcr.io/daba1211/ugreen-led-manager:0.3.6
+    image: ghcr.io/daba1211/ugreen-led-manager:0.3.7
     container_name: ugreen-led-manager
     restart: unless-stopped
     privileged: true
@@ -12,7 +12,7 @@ services:
       TZ: Europe/Berlin
       LED_MODE: real
       LED_CONFIG_PATH: /data/config/led-config.json
-      LED_CLI_PATH: /opt/ugreen-led-mananger/bin/ugreen_leds_cli
+      LED_CLI_PATH: /opt/ugreen-led/bin/ugreen_leds_cli
       LED_MONITOR_ENABLED: "true"
       LED_DISK_MAP: "disk1:sda,disk2:sdb,disk3:sdc,disk4:sdd"
       LED_SMART_DEVICE_TYPE: "ata"
@@ -21,8 +21,8 @@ services:
       LED_ACTIVE_HOLD_SECONDS: "20"
       LED_IDLE_AFTER_SECONDS: "45"
     volumes:
-      - /DATA/AppData/ugreen-led-manager/config:/data/config
-      - /DATA/AppData/ugreen-led-manager/bin:/opt/ugreen-led/bin:ro
+      - /DATA/AppData/uGREEN LED MANAGER/config:/data/config
+      - /DATA/AppData/uGREEN LED MANAGER/bin:/opt/ugreen-led/bin:ro
       - /dev:/dev
       - /sys:/sys:ro
       - /lib/modules:/lib/modules:ro
