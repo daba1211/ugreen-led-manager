@@ -12,7 +12,7 @@ services:
       TZ: Europe/Berlin
       LED_MODE: real
       LED_CONFIG_PATH: /data/config/led-config.json
-      LED_CLI_PATH: /opt/ugreen-led/bin/ugreen_leds_cli
+      LED_CLI_PATH: /bin/ugreen_leds_cli
       LED_MONITOR_ENABLED: "true"
       LED_DISK_MAP: "disk1:sda,disk2:sdb,disk3:sdc,disk4:sdd"
       LED_SMART_DEVICE_TYPE: "ata"
