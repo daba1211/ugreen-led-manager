@@ -37,12 +37,6 @@ class MockLedService:
             f"-brightness {_brightness_value(config['netdev'])}"
         )
 
-        for disk in ("disk1", "disk2", "disk3", "disk4"):
-            c = config[disk]["active"]
-            commands.append(
-                f"{disk} -on -color {c['r']} {c['g']} {c['b']} "
-                f"-brightness {_brightness_value(c)}"
-            )
 
         return {
             "mode": "mock",
@@ -110,9 +104,6 @@ class CliLedService:
         results = []
         results.append(self._run_set("power", config["power"]))
         results.append(self._run_set("netdev", config["netdev"]))
-
-        for disk in ("disk1", "disk2", "disk3", "disk4"):
-            results.append(self._run_set(disk, config[disk]["active"]))
 
         return {
             "mode": "real",
