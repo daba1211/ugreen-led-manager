@@ -48,8 +48,8 @@ x-casaos:
   author: daba1211
   category: Utilities
   developer: daba1211
-  icon: https://raw.githubusercontent.com/daba1211/ugreen-led-manager/main/assets/icon.png
-  thumbnail: https://raw.githubusercontent.com/daba1211/ugreen-led-manager/main/assets/icon.png
+  icon: https://raw.githubusercontent.com/daba1211/ugreen-led-manager/main/assets/logo.svg
+  thumbnail: https://raw.githubusercontent.com/daba1211/ugreen-led-manager/main/assets/logo.svg
   index: /
   port_map: "8088"
   project_url: https://github.com/daba1211/ugreen-led-manager
