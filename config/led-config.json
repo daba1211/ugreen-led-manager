@@ -18,12 +18,6 @@
       "b": 0,
       "brightness": 255
     },
-    "idle": {
-      "r": 0,
-      "g": 255,
-      "b": 0,
-      "brightness": 255
-    }
     "standby": {
       "r": 255,
       "g": 165,
@@ -44,12 +38,6 @@
       "b": 0,
       "brightness": 255
     },
-    "idle": {
-      "r": 0,
-      "g": 255,
-      "b": 0,
-      "brightness": 255
-    }
     "standby": {
       "r": 255,
       "g": 165,
@@ -70,12 +58,6 @@
       "b": 0,
       "brightness": 255
     },
-    "idle": {
-      "r": 0,
-      "g": 255,
-      "b": 0,
-      "brightness": 255
-    }
     "standby": {
       "r": 255,
       "g": 165,
@@ -96,12 +78,6 @@
       "b": 0,
       "brightness": 255
     },
-    "idle": {
-      "r": 0,
-      "g": 255,
-      "b": 0,
-      "brightness": 255
-    }
     "standby": {
       "r": 255,
       "g": 165,

@@ -50,17 +50,13 @@ class DiskMonitor:
         # Timing
         self.poll_interval = float(os.environ.get("LED_POLL_INTERVAL", "10"))
         self.smart_interval = float(os.environ.get("LED_SMART_INTERVAL", "60"))
-        self.active_hold_seconds = float(os.environ.get("LED_ACTIVE_HOLD_SECONDS", "20"))
-        self.idle_after_seconds = float(os.environ.get("LED_IDLE_AFTER_SECONDS", "45"))
 
         # Internal state
-        self.last_stat = {}
-        self.last_change = {}
         self.last_smart = {}
         self.last_smart_check = {}
         self.last_applied = {}
         self.current_state = {}
-
+        self._lock = threading.Lock()
         self._thread = None
 
     def start(self):
@@ -77,10 +73,21 @@ class DiskMonitor:
 
     def get_states(self):
         """
-        Kann später von der App genutzt werden, um den letzten erkannten Zustand
+        Kann von der App genutzt werden, um den letzten erkannten Zustand
         pro Disk in der Oberfläche anzuzeigen.
         """
-        return dict(self.current_state)
+        with self._lock:
+            return dict(self.current_state)
+
+    def refresh_now(self):
+        if not self.enabled:
+            return {"triggered": False, "reason": "disabled"}
+
+        try:
+            self._apply_disk_states()
+            return {"triggered": True, "states": self.get_states()}
+        except Exception as exc:
+            return {"triggered": False, "error": str(exc)}
 
     def _read_block_stat(self, dev_name):
         """
@@ -201,43 +208,23 @@ class DiskMonitor:
 
         Erwartete Zustände:
         - active
-        - idle
         - standby
         - error
 
         Fallback:
-        - wenn idle fehlt -> active
-        - wenn state allgemein fehlt -> active
+        - wenn state fehlt -> active
         """
-        if state in disk_cfg:
-            return disk_cfg[state]
-
-        if state == "idle" and "active" in disk_cfg:
-            return disk_cfg["active"]
-
-        return disk_cfg.get("active")
+        return disk_cfg.get(state) or disk_cfg.get("active")
 
     def _desired_state(self, led_name, dev_name):
-        now = time.monotonic()
         stat = self._read_block_stat(dev_name)
 
         # Device / sysfs fehlt -> error
         if stat is None:
             return "error"
 
-        previous = self.last_stat.get(led_name)
-
-        # Initialisierung
-        if previous is None:
-            self.last_stat[led_name] = stat
-            self.last_change[led_name] = now
-        elif stat != previous:
-            # Es gab I/O-Änderung -> als Aktivität merken
-            self.last_stat[led_name] = stat
-            self.last_change[led_name] = now
-
-        # SMART / standby nur in definierten Intervallen prüfen
         if self.smart_check_enabled:
+            now = time.monotonic()
             if now - self.last_smart_check.get(led_name, 0) >= self.smart_interval:
                 self.last_smart[led_name] = self._probe_smart(dev_name)
                 self.last_smart_check[led_name] = now
@@ -254,65 +241,49 @@ class DiskMonitor:
             },
         )
 
-        # Reihenfolge ist wichtig:
-        # 1) error
-        # 2) standby
-        # 3) active
-        # 4) idle
         if smart_info.get("error"):
             return "error"
 
         if smart_info.get("standby"):
             return "standby"
 
-        age = now - self.last_change.get(led_name, now)
-
-        if age <= self.active_hold_seconds:
-            return "active"
-
-        if age >= self.idle_after_seconds:
-            return "idle"
-
         return "active"
 
     def _apply_disk_states(self):
-        config = load_config()
+        with self._lock:
+            config = load_config()
 
-        for led_name, dev_name in self.disk_map.items():
-            if led_name not in config:
-                continue
+            for led_name, dev_name in self.disk_map.items():
+                if led_name not in config:
+                    continue
 
-            state = self._desired_state(led_name, dev_name)
-            self.current_state[led_name] = state
+                state = self._desired_state(led_name, dev_name)
+                self.current_state[led_name] = state
 
-            disk_cfg = config[led_name]
-            color_cfg = self._pick_color_config(disk_cfg, state)
+                disk_cfg = config[led_name]
+                color_cfg = self._pick_color_config(disk_cfg, state)
+                if not color_cfg:
+                    continue
 
-            if not color_cfg:
-                continue
-
-            apply_key = (
-                state,
-                int(color_cfg.get("r", 0)),
-                int(color_cfg.get("g", 0)),
-                int(color_cfg.get("b", 0)),
-                int(color_cfg.get("brightness", 255)),
-            )
-
-            # Nur bei echter Änderung neu setzen
-            if self.last_applied.get(led_name) == apply_key:
-                continue
-
-            result = self.led_service.set_color(led_name, color_cfg)
-
-            # Nur bei Erfolg den letzten Zustand übernehmen
-            if result.get("success"):
-                self.last_applied[led_name] = apply_key
-            else:
-                print(
-                    f"[disk-monitor] failed to apply {led_name}={state}: {result}",
-                    flush=True
+                apply_key = (
+                    state,
+                    int(color_cfg.get("r", 0)),
+                    int(color_cfg.get("g", 0)),
+                    int(color_cfg.get("b", 0)),
+                    int(color_cfg.get("brightness", 255)),
                 )
+
+                if self.last_applied.get(led_name) == apply_key:
+                    continue
+
+                result = self.led_service.set_color(led_name, color_cfg)
+                if result.get("success"):
+                    self.last_applied[led_name] = apply_key
+                else:
+                    print(
+                        f"[disk-monitor] failed to apply {led_name}={state}: {result}",
+                        flush=True,
+                    )
 
     def _loop(self):
         while True:

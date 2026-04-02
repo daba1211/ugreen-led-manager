@@ -35,6 +35,11 @@ def api_status():
     return jsonify(led_service.status())
 
 
+@app.route("/api/disk-states", methods=["GET"])
+def api_disk_states():
+    return jsonify(disk_monitor.get_states())
+
+
 @app.route("/api/preflight", methods=["GET"])
 def api_preflight():
     return jsonify(preflight.check())
@@ -49,7 +54,12 @@ def api_preflight_fix():
 def api_apply():
     config = load_config()
     result = led_service.apply_config(config)
-    return jsonify(result)
+    disk_refresh = disk_monitor.refresh_now()
+
+    return jsonify({
+        **result,
+        "disk_refresh": disk_refresh,
+    })
 
 
 @app.route("/api/off", methods=["POST"])

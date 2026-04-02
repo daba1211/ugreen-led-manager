@@ -3,25 +3,21 @@ const DEFAULT_CONFIG = {
     netdev: { r: 0, g: 255, b: 0, brightness: 255 },
     disk1: {
         active: { r: 0, g: 255, b: 0, brightness: 255 },
-        idle: { r: 0, g: 120, b: 255, brightness: 80 },
         standby: { r: 255, g: 165, b: 0, brightness: 96 },
         error: { r: 255, g: 0, b: 0, brightness: 255 }
     },
     disk2: {
         active: { r: 0, g: 255, b: 0, brightness: 255 },
-        idle: { r: 0, g: 120, b: 255, brightness: 80 },
         standby: { r: 255, g: 165, b: 0, brightness: 96 },
         error: { r: 255, g: 0, b: 0, brightness: 255 }
     },
     disk3: {
         active: { r: 0, g: 255, b: 0, brightness: 255 },
-        idle: { r: 0, g: 120, b: 255, brightness: 80 },
         standby: { r: 255, g: 165, b: 0, brightness: 96 },
         error: { r: 255, g: 0, b: 0, brightness: 255 }
     },
     disk4: {
         active: { r: 0, g: 255, b: 0, brightness: 255 },
-        idle: { r: 0, g: 120, b: 255, brightness: 80 },
         standby: { r: 255, g: 165, b: 0, brightness: 96 },
         error: { r: 255, g: 0, b: 0, brightness: 255 }
     }
@@ -43,7 +39,6 @@ const I18N = {
         power: "Power",
         network: "Netzwerk",
         active: "Aktiv",
-        idle: "Idle",
         standby: "Standby",
         error: "Fehler",
         color: "Farbe",
@@ -85,7 +80,6 @@ const I18N = {
         power: "Power",
         network: "Network",
         active: "Active",
-        idle: "Idle",
         standby: "Standby",
         error: "Error",
         color: "Color",
@@ -216,7 +210,6 @@ function renderDiskCard(index) {
                 ${t("currentState")}: <strong id="${diskName}-state-value">${stateLabel(currentState)}</strong>
             </div>
             ${renderControlRow(`${diskName}.active`, t("active"))}
-            ${renderControlRow(`${diskName}.idle`, t("idle"))}
             ${renderControlRow(`${diskName}.standby`, t("standby"))}
             ${renderControlRow(`${diskName}.error`, t("error"))}
         </div>
@@ -271,7 +264,6 @@ function fillControlsFromConfig() {
 
     for (let i = 1; i <= 4; i++) {
         fillControl(`disk${i}.active`);
-        fillControl(`disk${i}.idle`);
         fillControl(`disk${i}.standby`);
         fillControl(`disk${i}.error`);
     }
@@ -305,10 +297,10 @@ function bindControlEvents() {
     const ids = [
         "power",
         "netdev",
-        "disk1-active", "disk1-idle", "disk1-standby", "disk1-error",
-        "disk2-active", "disk2-idle", "disk2-standby", "disk2-error",
-        "disk3-active", "disk3-idle", "disk3-standby", "disk3-error",
-        "disk4-active", "disk4-idle", "disk4-standby", "disk4-error"
+        "disk1-active", "disk1-standby", "disk1-error",
+        "disk2-active", "disk2-standby", "disk2-error",
+        "disk3-active", "disk3-standby", "disk3-error",
+        "disk4-active", "disk4-standby", "disk4-error"
     ];
 
     ids.forEach(id => {
@@ -372,6 +364,7 @@ async function loadDiskStates() {
     try {
         const res = await fetch("/api/disk-states", { cache: "no-store" });
         if (!res.ok) {
+            console.error("Failed to load /api/disk-states:", res.status);
             return;
         }
 
@@ -386,7 +379,7 @@ async function loadDiskStates() {
             }
         }
     } catch (err) {
-        // optional endpoint
+        console.error("Failed to load disk states:", err);
     }
 }
 
@@ -405,25 +398,21 @@ function collectConfig() {
         netdev: collectControl("netdev"),
         disk1: {
             active: collectControl("disk1.active"),
-            idle: collectControl("disk1.idle"),
             standby: collectControl("disk1.standby"),
             error: collectControl("disk1.error")
         },
         disk2: {
             active: collectControl("disk2.active"),
-            idle: collectControl("disk2.idle"),
             standby: collectControl("disk2.standby"),
             error: collectControl("disk2.error")
         },
         disk3: {
             active: collectControl("disk3.active"),
-            idle: collectControl("disk3.idle"),
             standby: collectControl("disk3.standby"),
             error: collectControl("disk3.error")
         },
         disk4: {
             active: collectControl("disk4.active"),
-            idle: collectControl("disk4.idle"),
             standby: collectControl("disk4.standby"),
             error: collectControl("disk4.error")
         }

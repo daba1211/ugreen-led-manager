@@ -2,7 +2,7 @@ name: ugreen-led-manager
 
 services:
   app:
-    image: ghcr.io/daba1211/ugreen-led-manager:0.3.7
+    image: ghcr.io/daba1211/ugreen-led-manager:0.3.8
     container_name: ugreen-led-manager
     restart: unless-stopped
     privileged: true
@@ -19,8 +19,6 @@ services:
       LED_SMART_DEVICE_TYPE: "ata"
       LED_POLL_INTERVAL: "10"
       LED_SMART_INTERVAL: "60"
-      LED_ACTIVE_HOLD_SECONDS: "20"
-      LED_IDLE_AFTER_SECONDS: "45"
       LED_I2C_DEVICE: /dev/i2c-1
     volumes:
       - /DATA/AppData/ugreen-led-manager/config:/data/config
